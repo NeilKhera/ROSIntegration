@@ -29,7 +29,7 @@ public:
 	int32 ROSBridgeServerPort = 9090;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ROS")
-	bool bConnectToROS = true;
+	bool bConnectToROS = false;
 
 	UPROPERTY(BlueprintReadOnly, Category = "ROS")
 	bool bIsConnected = false;
