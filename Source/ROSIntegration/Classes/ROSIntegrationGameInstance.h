@@ -8,7 +8,7 @@
 
 #include "ROSIntegrationGameInstance.generated.h"
 
-UCLASS(config = Game, defaultconfig)
+UCLASS()
 class ROSINTEGRATION_API UROSIntegrationGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
@@ -22,8 +22,8 @@ public:
 	UPROPERTY()
 	UROSIntegrationCore* ROSIntegrationCore = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ROS", config)
-	FString ROSBridgeServerHost;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ROS")
+	FString ROSBridgeServerHost = "127.0.0.1";
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ROS")
 	int32 ROSBridgeServerPort = 9090;
@@ -45,6 +45,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
 	bool bCheckHealth = true;
+
+	UFUNCTION(BlueprintCallable, Category = "ROS")
+	void SetROSConnect(bool doConnect, FString ROSIP);
 
 protected:
 	void CheckROSBridgeHealth();

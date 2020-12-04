@@ -192,6 +192,54 @@ void UROSIntegrationGameInstance::BeginDestroy()
 	UE_LOG(LogROS, Display, TEXT("ROS Game Instance - begin destroy - done"));
 }
 
+void UROSIntegrationGameInstance::SetROSConnect(bool doConnect, FString ROSIP)
+{
+	bConnectToROS = doConnect;
+	ROSBridgeServerHost = ROSIP;
+
+	// reconnect again
+	bIsConnected = false;
+	bReconnect = true;
+	Init();
+	bReconnect = false;
+
+	// tell everyone (Topics, Services, etc.) they lost connection and should stop any interaction with ROS for now.
+	MarkAllROSObjectsAsDisconnected();
+
+	if (!bIsConnected)
+	{
+		return; // Let timer call this method again to retry connection attempt
+	}
+
+	// tell everyone (Topics, Services, etc.) they can try to reconnect (subscribe and advertise)
+	{
+		for (TObjectIterator<UTopic> It; It; ++It)
+		{
+			UTopic* Topic = *It;
+
+			bool success = Topic->Reconnect(ROSIntegrationCore);
+			if (!success)
+			{
+				bIsConnected = false;
+				UE_LOG(LogROS, Error, TEXT("Unable to re-establish topic %s."), *Topic->GetDetailedInfo());
+			}
+		}
+		for (TObjectIterator<UService> It; It; ++It)
+		{
+			UService* Service = *It;
+
+			bool success = Service->Reconnect(ROSIntegrationCore);
+			if (!success)
+			{
+				bIsConnected = false;
+				UE_LOG(LogROS, Error, TEXT("Unable to re-establish service %s."), *Service->GetDetailedInfo());
+			}
+		}
+	}
+
+	UE_LOG(LogROS, Display, TEXT("Successfully reconnected to rosbridge %s:%u."), *ROSBridgeServerHost, ROSBridgeServerPort);
+}
+
 #if ENGINE_MINOR_VERSION > 23
 void UROSIntegrationGameInstance::OnWorldTickStart(UWorld * World, ELevelTick TickType, float DeltaTime)
 #else 
