@@ -245,6 +245,14 @@ void UTopic::Init(UROSIntegrationCore *Ric, FString Topic, FString MessageType, 
 void UTopic::MarkAsDisconnected()
 {
 	_State.Connected = false;
+	if (_State.Advertised)
+	{
+		Unadvertise();
+	}
+	if (_State.Subscribed)
+	{
+		Unsubscribe();
+	}
 }
 
 bool UTopic::Reconnect(UROSIntegrationCore* ROSIntegrationCore)
