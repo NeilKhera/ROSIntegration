@@ -16,7 +16,7 @@ namespace ROSMessages {
 			MultiArrayLayout layout;
 
 			//# array of data
-			TArray<int> data;
+			TArray<int32> data;
 		};
 	}
 }

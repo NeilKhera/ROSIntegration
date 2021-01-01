@@ -136,13 +136,10 @@ void UROSIntegrationGameInstance::SetROSConnect(bool doConnect, FString ROSIP)
 	}
 	else
 	{
-
 		bConnectToROS = false;
 		bReconnect = false;
 		if (bTimerSet)
 		{
-			UE_LOG(LogROS, Error, TEXT("BEEEEEEEEEEEEEEEEEEEE."));
-
 			GetTimerManager().ClearTimer(TimerHandle_CheckHealth);
 			bTimerSet = false;
 		}
