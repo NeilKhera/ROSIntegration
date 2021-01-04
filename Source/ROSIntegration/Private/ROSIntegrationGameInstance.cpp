@@ -22,6 +22,7 @@ static void MarkAllROSObjectsAsDisconnected()
 	}
 }
 
+// TODO: Do not init each time ROS is rebooted
 void UROSIntegrationGameInstance::Init()
 {
 	if (bConnectToROS)
