@@ -4,13 +4,13 @@
 #include <UObject/ObjectMacros.h>
 #include <UObject/Object.h>
 #include "Conversion/Messages/BaseMessageConverter.h"
-#include "rasm_msgs/Waypoint.h"
+#include "rasm/RASM_GOAL_MSG.h"
 
-#include "RasmMsgsWaypointConverter.generated.h"
+#include "RasmGoalMsgConverter.generated.h"
 
 
 UCLASS()
-class ROSINTEGRATION_API URasmMsgsWaypointConverter : public UBaseMessageConverter
+class ROSINTEGRATION_API URasmGoalMsgConverter : public UBaseMessageConverter
 {
 	GENERATED_UCLASS_BODY()
 
