@@ -81,5 +81,8 @@ protected:
 
 	UPROPERTY()
 	class UTopic* ClockTopic = nullptr;
+
+private:
+	bool Validate(FString ROSIP);
 };
 

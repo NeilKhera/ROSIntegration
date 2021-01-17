@@ -1,10 +1,13 @@
 #include "ROSIntegrationGameInstance.h"
+#include "Internationalization/Regex.h"
+
 #include "RI/Topic.h"
 #include "RI/Service.h"
+
 #include "ROSTime.h"
 #include "rosgraph_msgs/Clock.h"
-#include "Misc/App.h"
 
+#include "Misc/App.h"
 
 static void MarkAllROSObjectsAsDisconnected()
 {
@@ -84,6 +87,16 @@ void UROSIntegrationGameInstance::Init()
 	}
 }
 
+bool UROSIntegrationGameInstance::Validate(FString ROSIP)
+{
+	// Regex expression for validating IPv4
+	const FRegexPattern ipv4(TEXT("(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])"));
+	FRegexMatcher matcher(ipv4, ROSIP);
+
+	// Return
+	return matcher.FindNext() && ROSIP == matcher.GetCaptureGroup(0);
+}
+
 void UROSIntegrationGameInstance::CheckROSBridgeHealth()
 {
 	if (!bCheckHealth || (bIsConnected && ROSIntegrationCore->IsHealthy()))
@@ -127,7 +140,7 @@ void UROSIntegrationGameInstance::BeginDestroy()
 
 void UROSIntegrationGameInstance::SetROSConnect(bool doConnect, FString ROSIP)
 {
-	if (doConnect)
+	if (doConnect && Validate(ROSIP))
 	{
 		bConnectToROS = true;
 		ROSBridgeServerHost = ROSIP;
