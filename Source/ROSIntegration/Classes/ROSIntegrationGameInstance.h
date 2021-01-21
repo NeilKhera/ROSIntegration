@@ -4,7 +4,9 @@
 #include <Engine/GameInstance.h>
 #include <Engine/EngineTypes.h>
 #include <Runtime/Launch/Resources/Version.h>
+
 #include "ROSIntegrationCore.h"
+#include "Internationalization/Regex.h"
 
 #include "ROSIntegrationGameInstance.generated.h"
 
@@ -29,18 +31,11 @@ struct FStartTime {
 };
 
 UCLASS()
-class ROSINTEGRATION_API UROSIntegrationGameInstance : public UGameInstance
-{
+class ROSINTEGRATION_API UROSIntegrationGameInstance : public UGameInstance {
+	
 	GENERATED_BODY()
 
 public:
-	virtual void Init() override;
-	virtual void Shutdown() override;
-	virtual void BeginDestroy() override;
-
-	UFUNCTION(BlueprintCallable, Category = "ROS")
-    void SetROSConnect(bool doConnect, FString ROSIP);
-
 	UPROPERTY()
 	UROSIntegrationCore* ROSIntegrationCore = nullptr;
 
@@ -59,30 +54,40 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "ROS")
 	bool bIsConnected = false;
 
+<<<<<<< HEAD
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
 	bool bSimulateTime = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
 	bool bUseFixedUpdateInterval = false;
 
+=======
+>>>>>>> 3e650fb (Lots of cleanup)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
-	float FixedUpdateInterval = 0.01666666667;
+	bool bSimulateTime = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
-    bool bCheckHealth = true;
+	bool bCheckHealth = true;
 
 protected:
-	void CheckROSBridgeHealth();
-	virtual void OnWorldTickStart(UWorld * World, ELevelTick TickType, float DeltaTime);
-
-	FTimerHandle TimerHandle_CheckHealth;
 	bool bTimerSet = false;
 	bool bReconnect = false;
 
-	UPROPERTY()
-	class UTopic* ClockTopic = nullptr;
+	FTimerHandle TimerHandle_CheckHealth;
 
-private:
+public:
+	virtual void Init() override;
+	virtual void Shutdown() override;
+	virtual void BeginDestroy() override;
+
+	UFUNCTION(BlueprintCallable, Category = "ROS")
+    void SetROSConnect(bool doConnect, FString ROSIP);
+
+protected:
 	bool Validate(FString ROSIP);
-};
 
+	void EnableROS();
+	void DisableROS();
+
+	void CheckROSBridgeHealth();
+};
