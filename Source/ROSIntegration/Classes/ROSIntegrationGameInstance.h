@@ -31,8 +31,8 @@ struct FStartTime {
 };
 
 UCLASS()
-class ROSINTEGRATION_API UROSIntegrationGameInstance : public UGameInstance
-{
+class ROSINTEGRATION_API UROSIntegrationGameInstance : public UGameInstance {
+
 	GENERATED_BODY()
 
 public:
@@ -54,20 +54,11 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "ROS")
 	bool bIsConnected = false;
 
-<<<<<<< HEAD
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
 	bool bSimulateTime = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
-	bool bUseFixedUpdateInterval = false;
-
-=======
->>>>>>> 3e650fb (Lots of cleanup)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
-	bool bSimulateTime = true;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
-    bool bCheckHealth = true;
+	bool bCheckHealth = true;
 
 protected:
 	bool bTimerSet = false;
@@ -88,7 +79,5 @@ protected:
 
 	void EnableROS();
 	void DisableROS();
-
 	void CheckROSBridgeHealth();
-
 };
