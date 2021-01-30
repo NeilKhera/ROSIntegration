@@ -5,6 +5,7 @@
 #include <Engine/EngineTypes.h>
 #include <Runtime/Launch/Resources/Version.h>
 
+#include "Misc/DateTime.h"
 #include "ROSIntegrationCore.h"
 #include "Internationalization/Regex.h"
 
