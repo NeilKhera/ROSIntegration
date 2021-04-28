@@ -8,6 +8,26 @@
 
 #include "ROSIntegrationGameInstance.generated.h"
 
+USTRUCT(BlueprintType)
+struct FStartTime {
+
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test") int32 year;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test") int32 month;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test") int32 day;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test") int32 hour;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test") int32 minute;
+
+	FStartTime() {
+		year = 1970;
+		month = 1;
+		day = 1;
+		hour = 0;
+		minute = 0;
+	}
+};
+
 UCLASS()
 class ROSINTEGRATION_API UROSIntegrationGameInstance : public UGameInstance
 {
@@ -24,6 +44,9 @@ public:
 	UPROPERTY()
 	UROSIntegrationCore* ROSIntegrationCore = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
+	FStartTime start_time;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ROS")
 	FString ROSBridgeServerHost = "127.0.0.1";
 
@@ -36,7 +59,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "ROS")
 	bool bIsConnected = false;
 
-	UPROPERTY(EditAnywhere, Category = "ROS")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
 	bool bSimulateTime = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
