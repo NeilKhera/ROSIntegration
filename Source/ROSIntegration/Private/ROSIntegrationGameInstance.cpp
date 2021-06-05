@@ -18,6 +18,7 @@ static void MarkAllROSObjectsAsDisconnected() {
 
 void UROSIntegrationGameInstance::Init() {
 	UE_LOG(LogROS, Display, TEXT("ROS Game Instance - initialize - start"));
+	ReceiveInit();
 	if (bConnectToROS) {
 		EnableROS();
 	}
@@ -39,12 +40,10 @@ void UROSIntegrationGameInstance::BeginDestroy() {
 }
 
 void UROSIntegrationGameInstance::SetROSConnect(bool doConnect, FString ROSIP) {
+	ROSBridgeServerHost = ROSIP;
 	if (doConnect && Validate(ROSIP)) {
 		bConnectToROS = true;
-		ROSBridgeServerHost = ROSIP;
-		bReconnect = false;
-
-		Init();
+		EnableROS();
 	} else {
 		DisableROS();
 	}
@@ -67,14 +66,14 @@ void UROSIntegrationGameInstance::EnableROS() {
 	}
 
 	ROSIntegrationCore = NewObject<UROSIntegrationCore>(UROSIntegrationCore::StaticClass()); // ORIGINAL 
-	bIsConnected = ROSIntegrationCore->Init(ROSBridgeServerHost, ROSBridgeServerPort);
+	bConnectToROS = ROSIntegrationCore->Init(ROSBridgeServerHost, ROSBridgeServerPort);
 
 	if (!bTimerSet) {
 		bTimerSet = true;
 		GetTimerManager().SetTimer(TimerHandle_CheckHealth, this, &UROSIntegrationGameInstance::CheckROSBridgeHealth, 1.0f, true, 2.0f);
 	}
 
-	if (bIsConnected) {
+	if (bConnectToROS) {
 		UWorld* CurrentWorld = GetWorld();
 		if (CurrentWorld) {
 			ROSIntegrationCore->SetWorld(CurrentWorld);
@@ -82,14 +81,13 @@ void UROSIntegrationGameInstance::EnableROS() {
 		} else {
 			UE_LOG(LogROS, Display, TEXT("World not available in UROSIntegrationGameInstance::Init()!"));
 		}
-	} else if (!bReconnect) {
+	} else {
 		UE_LOG(LogROS, Error, TEXT("Failed to connect to server %s:%u. Please make sure that your rosbridge is running."), *ROSBridgeServerHost, ROSBridgeServerPort);
 	}
 }
 
 void UROSIntegrationGameInstance::DisableROS() {
 	bConnectToROS = false;
-	bReconnect = false;
 	if (bTimerSet) {
 		GetTimerManager().ClearTimer(TimerHandle_CheckHealth);
 		bTimerSet = false;
@@ -102,12 +100,10 @@ void UROSIntegrationGameInstance::DisableROS() {
 		ROSIntegrationCore = nullptr;
 		oldRosCore->ConditionalBeginDestroy();
 	}
-
-	bIsConnected = false;
 }
 
 void UROSIntegrationGameInstance::CheckROSBridgeHealth() {
-	if (!bCheckHealth || (bIsConnected && ROSIntegrationCore->IsHealthy())) {
+	if (!bCheckHealth || (bConnectToROS && ROSIntegrationCore->IsHealthy())) {
 		return;
 	}
 	

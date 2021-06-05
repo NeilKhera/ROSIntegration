@@ -52,18 +52,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ROS")
 	bool bConnectToROS = false;
 
-	UPROPERTY(BlueprintReadOnly, Category = "ROS")
-	bool bIsConnected = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
-	bool bSimulateTime = true;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ROS")
 	bool bCheckHealth = true;
 
 protected:
 	bool bTimerSet = false;
-	bool bReconnect = false;
 
 	FTimerHandle TimerHandle_CheckHealth;
 
